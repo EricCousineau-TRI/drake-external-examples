@@ -16,49 +16,30 @@
 
 workspace(name = "bazel_drake_sources")
 
-load("//tools:bitbucket.bzl", "bitbucket_archive")
-load("//tools:github.bzl", "github_archive")
-
 ##############################################################################
 # The Drakeverse
 ##############################################################################
 
-github_archive(
+local_repository(
     name = "drake",
-    repository = "RobotLocomotion/drake",
-    commit = "90f71bf4990ac2b9f9216868c991278c0d7869b4",
-    sha256 = "62feb7694279dd58794283e20ed45ffef9871c2f1d8cb3961c1e72823f034f3a",
+    path = "externals/drake-distro",
 )
 
+# Use workaround from:
+# * https://github.com/bazelbuild/bazel/issues/2757#issuecomment-290448615
+# * https://groups.google.com/forum/#!topic/bazel-discuss/OhBIZ1DzSIw
+
+# Copied from @drake//WORKSPACE. Ensure that this is syncrhonized!!!
+# -- START Required Load-Level Transitive Dependencies
+load("@drake//tools:github.bzl", "github_archive")
+# Required for buildifier.
 github_archive(
-    name = "fmt",
-    repository = "fmtlib/fmt",
-    commit = "3.0.1",
-    build_file = "tools/drake/fmt.BUILD",
-    sha256 = "dce62ab75a161dd4353a98364feb166d35e7eea382169d59d9ce842c49c55bad",
+    name = "io_bazel_rules_go",
+    repository = "bazelbuild/rules_go",
+    commit = "0.4.4",
+    sha256 = "afec53d875013de6cebe0e51943345c587b41263fdff36df5ff651fbf03c1c08",
 )
+# -- END Required Load-Level Transitive Dependencies
 
-github_archive(
-    name = "protobuf",
-    repository = "google/protobuf",
-    commit = "v3.1.0",
-    sha256 = "0a0ae63cbffc274efb573bdde9a253e3f32e458c41261df51c5dbc5ad541e8f7",
-)
-
-github_archive(
-    name = "spdlog",
-    repository = "gabime/spdlog",
-    commit = "43a4048b92ef5b7eff6dc637a621c7da3a41d194",
-    build_file = "tools/drake/spdlog.BUILD",
-    sha256 = "5166c036eacd625b86f725bfba356547e0bc497232649662c61cde7b1b423292",
-)
-
-bitbucket_archive(
-    name = "eigen",
-    repository = "eigen/eigen",
-    # N.B. See #5785; do your best not to have to bump this to a newer commit.
-    commit = "3.3.3",
-    sha256 = "94878cbfa27b0d0fbc64c00d4aafa137f678d5315ae62ba4aecddbd4269ae75f",
-    build_file = "tools/drake/eigen.BUILD",
-    strip_prefix = "eigen-eigen-67e894c6cd8f",
-)
+load("@drake//tools:drake_deps.bzl", "drake_deps")
+drake_deps() # Ignore install_dir, don't need drake-visualizer right now

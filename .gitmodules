@@ -1,0 +1,3 @@
+[submodule "bazel_drake_sources/externals/drake-distro"]
+	path = bazel_drake_sources/externals/drake-distro
+	url = git@github.com:EricCousineau-TRI/drake.git
