@@ -25,7 +25,6 @@ env-extend() {
     echo "[ FHS Environment extended: ${prefix} ]"
 }
 
-
 tmp_dir=/tmp/tmp.wbxv6adY3U # $(mktemp -d)
 install_dir=${tmp_dir}/install
 drake_install_prefix=${install_dir}/drake
@@ -51,26 +50,30 @@ mkdir -p src
     # git clone http://github.com/pointcloudlibrary/pcl.git -b ${PCL_REV}
     cd pcl
 
-    mkdir build && cd build
+    mkdir -p build && cd build
+
+    # TODO(eric.cousineau): 
     eigen_args="
       -DEIGEN_INCLUDE_DIR:PATH=${drake_install_prefix}/include/eigen3
       -DEIGEN_INCLUDE_DIRS:PATH=${drake_install_prefix}/include/eigen3
       -DEIGEN3_INCLUDE_DIR:PATH=${drake_install_prefix}/include/eigen3
       "
 
-    # NOTE: Cannot build with VTK due ot issue with `vtkVisibleCellSelector.h` not being found.
+    # TODO(eric.cousineau): Re-enable -WITH_VTK=ON once the following errors are resolved
+    # (by updating VTK packaging):
+    # - `vtkVisibleCellSelector.h` not found.
     cmake .. \
         -DCMAKE_INSTALL_PREFIX=${pcl_install_prefix} \
         -DCMAKE_CXX_FLAGS="-std=c++11 -fext-numeric-literals" \
         ${eigen_args} \
         -DWITH_OPENNI=OFF -DWITH_OPENNI2=OFF -DWITH_LIBUSB=OFF \
-        -DWITH_VTK=ON -DWITH_QT=ON \
+        -DWITH_VTK=OFF -DWITH_QT=ON \
         -DBUILD_TESTS=OFF -DBUILD_global_tests=OFF -DBUILD_examples=OFF
     make -j8 install
 
     # Strip rpath information.
     cd ${pcl_install_prefix}
-    find bin lib | xargs chrpath -d
+    find bin lib -maxdepth 1 -type f | xargs chrpath -d
 )
 
 (
