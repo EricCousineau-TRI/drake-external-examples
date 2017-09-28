@@ -41,7 +41,7 @@ cc_library(
         "include/pcl-1.7/pcl/**/*.hpp",
     ]),
     srcs = glob([
-        "lib/pcl_*.so*",
+        "lib/libpcl_*.so*",
     ]),
     defines = ["BSD"],
     includes = ["include/pcl-1.7"],
