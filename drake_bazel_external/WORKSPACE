@@ -89,6 +89,9 @@ github_archive(
 # Example Integration Dependencies
 ################################################################################
 
+# This archive was generated using the script:
+# /scripts/setup/linux/ubuntu/xenial/package_pcl.sh
+# TODO(eric.cousineau): Replace this with http_archive once we have somewhere to upload it.
 new_local_repository(
     name = "pcl",
     path = "/tmp/tmp.wbxv6adY3U/install/pcl",

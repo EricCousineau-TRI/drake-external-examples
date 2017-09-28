@@ -46,9 +46,9 @@ cc_test(
 )
 
 cc_test(
-    name = "simple_pcl_binary",
+    name = "simple_pcl_test",
     size = "small",
-    srcs = ["simple_pcl_binary.cc"],
+    srcs = ["simple_pcl_test.cc"],
     deps = [
         "@drake//drake/systems/primitives:random_source",
         "@pcl",
