@@ -34,7 +34,7 @@ env-extend() {
     echo "[ FHS Environment extended: ${prefix} ]"
 }
 
-tmp_dir=/tmp/tmp.wbxv6adY3U # $(mktemp -d)
+tmp_dir=$(mktemp -d)
 install_dir=${tmp_dir}/install
 drake_install_prefix=${install_dir}/drake
 pcl_install_prefix=${install_dir}/pcl
