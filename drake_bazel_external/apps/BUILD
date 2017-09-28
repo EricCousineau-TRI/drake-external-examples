@@ -44,3 +44,13 @@ cc_test(
         "@drake//drake/systems/framework:vector",
     ],
 )
+
+cc_test(
+    name = "simple_pcl_binary",
+    size = "small",
+    srcs = ["simple_pcl_binary.cc"],
+    deps = [
+        "@drake//drake/systems/primitives:random_source",
+        "@pcl",
+    ],
+)

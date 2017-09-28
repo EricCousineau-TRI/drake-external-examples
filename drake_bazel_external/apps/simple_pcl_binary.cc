@@ -1,15 +1,18 @@
 #include <iostream>
 #include <random>
 
-#include <pcl/io/pcd_io.h>
+#include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include <pcl/filters/filter.h>
 #include <pcl/filters/voxel_grid.h>
 
-#include <drake/systems/primitives/random_source.h>
+// TODO(eric.cousineau): Figure out how to make Bazel permit angle brackets.
+#include "drake/systems/primitives/random_source.h"
 
-typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
+typedef pcl::PointXYZ PointT;
+typedef pcl::PointCloud<PointT> PointCloudT;
 
-typedef drake::systems::RandomState<std::uniform_real_distribution>
+typedef drake::systems::RandomState<std::uniform_real_distribution<double>>
     RandomStateT;
 
 int main (int argc, char** argv) {
@@ -32,17 +35,15 @@ int main (int argc, char** argv) {
     rand_pt(pt.data);
   }
 
-  std::cout << "PointCloud before filtering: " << cloud->size() 
-       << " data points (" << pcl::getFieldsList (*cloud) << ").";
+  std::cout << "PointCloud before filtering: " << cloud->size() << std::endl;
 
   // Create the filtering object
-  pcl::VoxelGrid<PointCloudT> filter;
+  pcl::VoxelGrid<PointT> filter;
   filter.setInputCloud(cloud);
   filter.setLeafSize(0.01f, 0.01f, 0.01f);
   filter.filter(*cloud_filtered);
 
-  std::cout << "PointCloud after filtering: " << cloud_filtered->width * cloud_filtered->height 
-       << " data points (" << pcl::getFieldsList (*cloud_filtered) << ").";
+  std::cout << "PointCloud after filtering: " << cloud->size() << std::endl;
 
-  return (0);
+  return 0;
 }
