@@ -41,12 +41,13 @@ pcl_install_prefix=${install_dir}/pcl
 
 archive_path_format=${tmp_dir}/pcl-%s-drake-%s-xenial-x86_64.tar.gz
 
+echo "[ Packaging in: ${tmp_dir} ]"
 cd ${tmp_dir}
 mkdir -p src
 
-if false; then
 # Clone `drake` from master, build, and install.
 (
+    echo "[ - Build and Install: drake ]"
     cd src
     git clone http://github.com/RobotLocomotion/drake -b ${DRAKE_REV}
     cd drake
@@ -56,6 +57,7 @@ if false; then
 
 # Use drake's install FHS, and build / install PCL in a separate directory.
 (
+    echo "[ - Build and Install: pcl ]"
     env-extend ${drake_install_prefix}
 
     cd src
@@ -88,7 +90,6 @@ if false; then
     cd ${pcl_install_prefix}
     find bin lib -maxdepth 1 -type f | xargs chrpath -d
 )
-fi
 
 (
     # Build test program as a means to ensure this fails fast if things are
@@ -111,6 +112,6 @@ fi
     archive_path=$(printf ${archive_path_format} ${PCL_VERSION} ${drake_sha})
 
     cd ${pcl_install_prefix}
-    echo "[ Packaging: ${archive_path} ]"
+    echo "[ Creating Package: ${archive_path} ]"
     tar cfz ${archive_path} *
 )
