@@ -37,5 +37,6 @@ include(CTest)
 include(GNUInstallDirs)
 
 find_package(drake CONFIG REQUIRED)
+find_package(pybind11 CONFIG REQUIRED)
 
 add_subdirectory(src)
