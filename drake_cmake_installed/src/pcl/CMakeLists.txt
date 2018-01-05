@@ -35,7 +35,7 @@
 # Important Caveat: This must come after any call to
 #   find_package(drake)
 # so that Drake's version of the bundled Eigen will be used.
-find_package(PCL CONFIG REQUIRED)
+find_package(PCL CONFIG REQUIRED COMPONENTS common filters)
 # Work around https://bugs.launchpad.net/ubuntu/+source/vtk6/+bug/1573234
 # by removing the missing vtkproj4 library from the list of needed files.
 # It's not actually needed for this example.

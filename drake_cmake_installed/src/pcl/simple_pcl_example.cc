@@ -113,7 +113,7 @@ DEFINE_bool(lookup, true,
 DEFINE_bool(show_window, true,
             "If true, RgbdCamera opens windows for displaying rendering "
             "context.");
-DEFINE_double(duration, 5., "Total duration of the simulation in secondes.");
+DEFINE_double(duration, 0.05, "Total duration of the simulation in secondes.");
 DEFINE_string(sdf_dir, "/home/eacousineau/proj/tri/repo/branches/drake-distro/master/systems/sensors/models",
               "The full path of directory where SDFs are located.");
 DEFINE_string(sdf_fixed, "sphere.sdf",
