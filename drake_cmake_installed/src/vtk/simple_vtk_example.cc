@@ -44,7 +44,7 @@
 //  * IO/WriteVTP
 //  * PolyData/PointSource
 
-int main() {
+void test_vtk() {
   std::cout << vtkVersion::GetVTKSourceVersion() << std::endl;
 
   // Create a point cloud.
@@ -70,5 +70,5 @@ int main() {
   reader->SetFileName(filename);
   reader->Update();
 
-  return 0;
+  std::cout << "Wrote file" << std::endl;
 }
