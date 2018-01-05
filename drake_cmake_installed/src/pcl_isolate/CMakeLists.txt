@@ -1,8 +1,7 @@
 # -*- mode: cmake -*-
 # vi: set ft=cmake :
 
-##############################################################################
-# Copyright (c) 2017, Toyota Research Institute.
+# Copyright (c) 2017, Massachusetts Institute of Technology.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,14 +29,13 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-##############################################################################
 
-find_package(VTK)
-include_directories(${VTK_INCLUDE_DIRS})
+cmake_minimum_required(VERSION 3.5.1)
+project(pcl_isolate)
 
-add_library(simple_vtk_example_lib SHARED simple_vtk_example.cc)
-target_link_libraries(simple_vtk_example_lib
-    ${VTK_LIBRARIES})
+include(CTest)
+include(GNUInstallDirs)
 
-add_executable(simple_vtk_example main.cc)
-target_link_libraries(simple_vtk_example simple_vtk_example_lib)
+link_directories(${SIMPLE_VTK_EXAMPLE_DIR})
+
+add_subdirectory(pcl)

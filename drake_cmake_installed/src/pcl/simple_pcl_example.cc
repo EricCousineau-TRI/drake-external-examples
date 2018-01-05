@@ -40,13 +40,13 @@
  */
 
 #include <iostream>
-#include <random>
+// #include <random>
 
-#include <drake/systems/primitives/random_source.h>
-#include <drake/common/autodiff.h>
+// #include <drake/systems/primitives/random_source.h>
+// #include <drake/common/autodiff.h>
 
-// Test Eigen header presence (fails if Drake's Eigen w/ additional Autodiff support is not utilised)
-#include <drake/solvers/mathematical_program.h>
+// // Test Eigen header presence (fails if Drake's Eigen w/ additional Autodiff support is not utilised)
+// #include <drake/solvers/mathematical_program.h>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -61,8 +61,8 @@
 typedef pcl::PointXYZ PointT;
 typedef pcl::PointCloud<PointT> PointCloudT;
 
-typedef drake::systems::internal::RandomState<std::uniform_real_distribution<double>>
-    RandomStateT;
+// typedef drake::systems::internal::RandomState<std::uniform_real_distribution<double>>
+//     RandomStateT;
 
 void test_pcl() {
   PointCloudT::Ptr cloud(new PointCloudT());
@@ -71,17 +71,9 @@ void test_pcl() {
   const int num_points = 100000;
   const float radius = 1;
 
-  RandomStateT rand = RandomStateT(drake::systems::internal::generate_unique_seed());
-  auto rand_pt = [&rand, radius](float pt[3]) {
-    for (int i = 0; i < 3; ++i) {
-      pt[i] = (rand.GetNextValue() * 2 - 1) * radius;
-    }
-  };
-
   cloud->resize(num_points);
   for (int i = 0; i < num_points; ++i) {
-    auto& pt = cloud->points[i];
-    rand_pt(pt.data);
+    cloud->points[i] = PointT(i, i, i);
   }
 
   std::cout << "PointCloud before filtering: " << cloud->size() << std::endl;
@@ -102,30 +94,7 @@ void test_pcl() {
 //  * IO/WriteVTP
 //  * PolyData/PointSource
 
-void test_vtk() {
-  // Create a point cloud.
-  vtkSmartPointer<vtkPointSource> pointSource =
-    vtkSmartPointer<vtkPointSource>::New();
-  pointSource->SetCenter(0.0, 0.0, 0.0);
-  pointSource->SetNumberOfPoints(50);
-  pointSource->SetRadius(5.0);
-  pointSource->Update();
-
-  // Write the file.
-  const char* filename = "test.vtp";
-  vtkSmartPointer<vtkXMLPolyDataWriter> writer =  
-    vtkSmartPointer<vtkXMLPolyDataWriter>::New();
-  writer->SetFileName(filename);
-
-  writer->SetInputData(pointSource->GetOutput());
-  writer->Write();
-
-  // Read the file.
-  vtkSmartPointer<vtkXMLPolyDataReader> reader =
-    vtkSmartPointer<vtkXMLPolyDataReader>::New();
-  reader->SetFileName(filename);
-  reader->Update();
-}
+void test_vtk();
 
 int main() {
   test_pcl();
