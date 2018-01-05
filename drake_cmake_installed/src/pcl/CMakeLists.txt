@@ -32,6 +32,10 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 
+
+find_package(VTK)
+include_directories(${VTK_INCLUDE_DIRS})
+
 # Important Caveat: This must come after any call to
 #   find_package(drake)
 # so that Drake's version of the bundled Eigen will be used.
@@ -42,5 +46,6 @@ find_package(PCL CONFIG REQUIRED)
 list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 
 include_directories(${PCL_INCLUDE_DIRS})
+
 add_executable(simple_pcl_example simple_pcl_example.cc)
-target_link_libraries(simple_pcl_example drake::drake ${PCL_LIBRARIES})
+target_link_libraries(simple_pcl_example drake::drake ${VTK_LIBRARIES} ${PCL_LIBRARIES})
