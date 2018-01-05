@@ -35,5 +35,9 @@
 find_package(VTK)
 include_directories(${VTK_INCLUDE_DIRS})
 
+find_package(PCL CONFIG REQUIRED)
+list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
+include_directories(${PCL_INCLUDE_DIRS})
+
 add_executable(simple_vtk_example simple_vtk_example.cc)
-target_link_libraries(simple_vtk_example ${VTK_LIBRARIES})
+target_link_libraries(simple_vtk_example ${PCL_LIBRARIES} ${VTK_LIBRARIES})

@@ -29,21 +29,14 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-/**
- * @file apps/simple_pcl_test.cc
- *
- * Simple PCL Example
- *
- * This is meant to test building / linking / executing with PCL.
- * This example just builds a random point cloud and downsamples it, printing
- * the size before and after.
- */
+#include <iostream>
 
 #include <vtkPointSource.h>
 #include <vtkXMLPolyDataReader.h>
 #include <vtkSmartPointer.h>
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkPolyData.h>
+#include <vtkVersion.h>
 
 // Write and read a point cloud.
 // Derived from VTK examples, VTK/Examples/Cxx/...:
@@ -52,6 +45,8 @@
 //  * PolyData/PointSource
 
 int main() {
+  std::cout << vtkVersion::GetVTKSourceVersion() << std::endl;
+
   // Create a point cloud.
   vtkSmartPointer<vtkPointSource> pointSource =
     vtkSmartPointer<vtkPointSource>::New();
