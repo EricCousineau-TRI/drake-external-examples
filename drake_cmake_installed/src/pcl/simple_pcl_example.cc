@@ -52,6 +52,11 @@
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 
+#include <vtkPointSource.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkSmartPointer.h>
+#include <vtkXMLPolyDataWriter.h>
+#include <vtkPolyData.h>
 
 typedef pcl::PointXYZ PointT;
 typedef pcl::PointCloud<PointT> PointCloudT;
@@ -59,7 +64,7 @@ typedef pcl::PointCloud<PointT> PointCloudT;
 typedef drake::systems::internal::RandomState<std::uniform_real_distribution<double>>
     RandomStateT;
 
-int main (int argc, char** argv) {
+void test_pcl() {
   PointCloudT::Ptr cloud(new PointCloudT());
   PointCloudT::Ptr cloud_filtered(new PointCloudT());
 
@@ -89,6 +94,41 @@ int main (int argc, char** argv) {
 
   std::cout << "PointCloud after filtering: "
       << cloud_filtered->size() << std::endl;
+}
 
+// Write and read a point cloud.
+// Derived from VTK examples, VTK/Examples/Cxx/...:
+//  * IO/ReadPolyData
+//  * IO/WriteVTP
+//  * PolyData/PointSource
+
+void test_vtk() {
+  // Create a point cloud.
+  vtkSmartPointer<vtkPointSource> pointSource =
+    vtkSmartPointer<vtkPointSource>::New();
+  pointSource->SetCenter(0.0, 0.0, 0.0);
+  pointSource->SetNumberOfPoints(50);
+  pointSource->SetRadius(5.0);
+  pointSource->Update();
+
+  // Write the file.
+  const char* filename = "test.vtp";
+  vtkSmartPointer<vtkXMLPolyDataWriter> writer =  
+    vtkSmartPointer<vtkXMLPolyDataWriter>::New();
+  writer->SetFileName(filename);
+
+  writer->SetInputData(pointSource->GetOutput());
+  writer->Write();
+
+  // Read the file.
+  vtkSmartPointer<vtkXMLPolyDataReader> reader =
+    vtkSmartPointer<vtkXMLPolyDataReader>::New();
+  reader->SetFileName(filename);
+  reader->Update();
+}
+
+int main() {
+  test_pcl();
+  test_vtk();
   return 0;
 }
