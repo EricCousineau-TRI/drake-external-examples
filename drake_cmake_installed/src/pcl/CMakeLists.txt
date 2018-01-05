@@ -44,4 +44,4 @@ list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 include_directories(${PCL_INCLUDE_DIRS})
 
 add_executable(simple_pcl_example simple_pcl_example.cc)
-target_link_libraries(simple_pcl_example ${PCL_LIBRARIES} simple_vtk_example_lib)
+target_link_libraries(simple_pcl_example ${PCL_LIBRARIES} drake::drake)
