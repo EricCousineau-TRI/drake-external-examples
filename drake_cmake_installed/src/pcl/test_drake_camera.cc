@@ -46,32 +46,62 @@
 #include <drake/multibody/rigid_body_tree_construction.h>
 #include <drake/systems/analysis/simulator.h>
 #include <drake/systems/framework/diagram_builder.h>
+#include <drake/systems/primitives/zero_order_hold.h>
+#include <drake/systems/sensors/image.h>
 #include <drake/systems/sensors/rgbd_camera.h>
+
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+
+typedef pcl::PointXYZ PointT;
+typedef pcl::PointCloud<PointT> PointCloudT;
+
+using drake::multibody::AddFlatTerrainToWorld;
+using drake::systems::DiagramBuilder;
+using drake::systems::RigidBodyPlant;
+using drake::systems::Simulator;
+using drake::systems::ZeroOrderHold;
+using drake::systems::sensors::ImageDepth32F;
+using drake::systems::sensors::RgbdCameraDiscrete;
+using drake::systems::sensors::RgbdCamera;
 
 namespace shambhala {
 
 int main() {
   // Creates a simple discrete RGB-D camera simulation.
-  drake::systems::DiagramBuilder<double> builder;
+  DiagramBuilder<double> builder;
 
+  // Create RigidBodyTree that shows flat ground.
   auto tree = std::make_unique<RigidBodyTree<double>>();
-  drake::multibody::AddFlatTerrainToWorld(tree.get());
-  auto plant = builder.AddSystem<drake::systems::RigidBodyPlant<double>>(
-      move(tree));
+  AddFlatTerrainToWorld(tree.get());
+  auto plant = builder.AddSystem<RigidBodyPlant<double>>(move(tree));
 
-  auto rgbd_camera =
-      builder.AddSystem<drake::systems::sensors::RgbdCameraDiscrete>(
-          std::make_unique<drake::systems::sensors::RgbdCamera>(
+  const double dt = 0.03;
+
+  // Add RGB-D camera simulation.
+  const RgbdCameraDiscrete* rgbd_camera =
+      builder.AddSystem<RgbdCameraDiscrete>(
+          std::make_unique<RgbdCamera>(
               "rgbd_camera", plant->get_rigid_body_tree(),
               Eigen::Vector3d(-1., 0., 1.),
               Eigen::Vector3d(0., M_PI_4, 0.),
               0.5, 5.,
               M_PI_4, false),
-      0.03);
-
+      dt);
+  // Connect to RigidBodyTree scene.
   builder.Connect(
       plant->get_output_port(0),
       rgbd_camera->state_input_port());
+  // Add ZOH to easily expose depth image as state.
+  const Value<ImageDepth32F> depth_image_model(width, height);
+  const auto* const zoh_depth =
+      builder.AddSystem<ZeroOrderHold>(dt, depth_image_model);
+  // Connect depth image to zero-order hold.
+  build.Connect(
+      rgbd_camera->depth_image_output_port(),
+      zoh_depth->get_input_port());
+
+  // Build diagram, and run simulation for 0.1 sec.
   auto diagram = builder.Build();
   auto simulator = std::make_unique<drake::systems::Simulator<double>>(
       *diagram);
@@ -79,6 +109,22 @@ int main() {
 
   // TODO(eric.cousineau): Add in example of converting depth image to PCL
   // point cloud.
+  const ImageDepth32F& depth_image =
+      diagram->GetSubsystemContext(simulator->get_context(), *zoh_depth)
+             ->get_abstract_state<ImageDepth32F>(0);
+
+  Eigen::Matrix3Xf point_cloud_eigen;
+  RgbdCamera::ConvertDepthImageToPointCloud(
+      depth_image, rgbd_camera->depth_camera_info(), &point_cloud);
+
+  PointCloudT::Ptr cloud(new PointCloudT());  
+  cloud->resize(num_points);
+  for (int i = 0; i < num_points; ++i) {
+    auto& pt = cloud->points[i];
+    rand_pt(pt.data);
+  }
+
+
 
   std::cout << "Finished camera simulation." << std::endl;
   return 0;
