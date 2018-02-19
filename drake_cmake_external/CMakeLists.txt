@@ -86,3 +86,6 @@ ExternalProject_Add(drake_shambhala
   BINARY_DIR "${PROJECT_BINARY_DIR}/drake_shambhala"
   BUILD_ALWAYS 1
 )
+
+find_package(drake CONFIG REQUIRED)
+message("Drake: ${drake_DIR}")

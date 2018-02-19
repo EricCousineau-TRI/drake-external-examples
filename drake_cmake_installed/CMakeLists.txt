@@ -44,10 +44,6 @@ include(GNUInstallDirs)
 
 find_package(drake CONFIG REQUIRED)
 
-include(${drake_DIR}/extra_vars.cmake)
-message("PYBIND11: ${DRAKE_PYBIND11_REPOSITORY}")
-message("PYBIND11: ${DRAKE_PYBIND11_STUFF}")
-
 find_package(PythonInterp 2.7 EXACT MODULE REQUIRED)
 # TODO(eric.cousineau): Update when RobotLocomotion/drake#8014 is resolved.
 set(_drake_sitepackages
@@ -55,5 +51,35 @@ set(_drake_sitepackages
 get_filename_component(_drake_sitepackages "${_drake_sitepackages}" ABSOLUTE)
 # TODO(eric.cousineau): Have a test inherit CMake's environment variables?
 set(ENV{PYTHONPATH} "${_drake_sitepackages}:$ENV{PYTHONPATH}")
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/install" CACHE STRING
+    "Install path prefix, prepended onto install directories" FORCE
+  )
+endif()
+
+include(ExternalProject)
+
+include(${drake_DIR}/extra_vars.cmake)
+
+ExternalProject_Add(pybind11
+  URL https://github.com/${DRAKE_PYBIND11_REPOSITORY}/archive/${DRAKE_PYBIND11_COMMIT}.tar.gz
+  URL_HASH SHA256=${DRAKE_PYBIND11_SHA256}
+  TLS_VERIFY 1
+  CMAKE_ARGS
+    # -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    # -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+    # -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    # -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    # -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+    # -DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}
+  CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+  BINARY_DIR "${PROJECT_BINARY_DIR}/pybind11"
+  BUILD_ALWAYS 1
+  BUILD_COMMAND :  # No need for building.
+  INSTALL_COMMAND :
+)
+
+# find_package(pybind11 CONFIG REQUIRED)
 
 add_subdirectory(src)
