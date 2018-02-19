@@ -44,6 +44,10 @@ include(GNUInstallDirs)
 
 find_package(drake CONFIG REQUIRED)
 
+include(${drake_DIR}/extra_vars.cmake)
+message("PYBIND11: ${DRAKE_PYBIND11_REPOSITORY}")
+message("PYBIND11: ${DRAKE_PYBIND11_STUFF}")
+
 find_package(PythonInterp 2.7 EXACT MODULE REQUIRED)
 # TODO(eric.cousineau): Update when RobotLocomotion/drake#8014 is resolved.
 set(_drake_sitepackages
