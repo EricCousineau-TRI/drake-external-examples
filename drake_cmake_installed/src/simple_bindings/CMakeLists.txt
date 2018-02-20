@@ -7,7 +7,7 @@ pybind11_add_module(
     example_module
     MODULE
     example_module.cc)
-target_link_libraries(example_module drake::drake)
+target_link_libraries(example_module PUBLIC drake::drake)
 
 add_test(
     NAME test_example_module

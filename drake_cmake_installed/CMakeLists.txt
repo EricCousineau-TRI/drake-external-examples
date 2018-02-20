@@ -37,8 +37,6 @@ project(drake_cmake_installed)
 # does not need X11.
 option(RUN_X11_TESTS "Run tests that require X11" OFF)
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
-
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/install" CACHE STRING
     "Install path prefix, prepended onto install directories" FORCE
