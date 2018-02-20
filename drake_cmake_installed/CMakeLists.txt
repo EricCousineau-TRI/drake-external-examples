@@ -75,9 +75,10 @@ ExternalProject_Add(pybind11
 
 ExternalProject_Add(src
   DEPENDS
-    drake pybind11
+    pybind11
   SOURCE_DIR "${PROJECT_SOURCE_DIR}/src"
   CMAKE_ARGS
+    -Ddrake_DIR=${drake_DIR}
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
     -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
