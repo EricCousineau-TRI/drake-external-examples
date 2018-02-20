@@ -66,6 +66,8 @@ ExternalProject_Add(pybind11
   BUILD_COMMAND :  # No need for building.
 )
 
+# Add `src` as a subproject so we can have it depend on `pybind11` and defer
+# its configuration to the build phase.
 ExternalProject_Add(src
   DEPENDS
     pybind11
@@ -84,6 +86,7 @@ ExternalProject_Add(src
   BUILD_ALWAYS 1
 )
 
+# Expose CTest targets at top-level.
 add_test(
   NAME test_src
   COMMAND
