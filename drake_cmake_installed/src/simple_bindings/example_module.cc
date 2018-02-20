@@ -36,7 +36,7 @@ class SimpleAdder : public LeafSystem<T> {
 PYBIND11_MODULE(example_module, m) {
   m.doc() = "Example module interfacing with pydrake and Drake C++";
 
-  py::module::import("pydrake.framework.systems");
+  py::module::import("pydrake.systems.framework");
 
   using T = double;
 
