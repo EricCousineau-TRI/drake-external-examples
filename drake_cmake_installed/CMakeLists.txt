@@ -51,6 +51,9 @@ find_package(drake CONFIG REQUIRED)
 include(ExternalProject)
 
 include(${drake_DIR}/DrakeExternalForksInfo.cmake)
+# N.B. Adding `pybind11` this way does not imply that an incremental build will
+# catch a version change. If you encounter an issue, consider clearing this
+# the build directory.
 ExternalProject_Add(pybind11
   URL https://github.com/${DRAKE_PYBIND11_REPOSITORY}/archive/${DRAKE_PYBIND11_COMMIT}.tar.gz
   URL_HASH SHA256=${DRAKE_PYBIND11_SHA256}
@@ -59,16 +62,8 @@ ExternalProject_Add(pybind11
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
     -DPYBIND11_TEST=OFF
     -DPYBIND11_INSTALL=ON
-    # -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    # -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-    # -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-    # -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-    # -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-    # -DCMAKE_VERBOSE_MAKEFILE=${CMAKE_VERBOSE_MAKEFILE}
   BINARY_DIR "${PROJECT_BINARY_DIR}/pybind11"
-  BUILD_ALWAYS 1
   BUILD_COMMAND :  # No need for building.
-  # INSTALL_COMMAND :
 )
 
 ExternalProject_Add(src
