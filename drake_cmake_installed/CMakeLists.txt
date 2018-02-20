@@ -88,3 +88,11 @@ ExternalProject_Add(src
   BINARY_DIR "${PROJECT_BINARY_DIR}/src"
   BUILD_ALWAYS 1
 )
+
+add_test(
+  NAME test_src
+  COMMAND
+    "ctest"
+  WORKING_DIRECTORY
+    "${PROJECT_BINARY_DIR}/src"
+)
