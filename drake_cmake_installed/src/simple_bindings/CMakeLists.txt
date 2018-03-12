@@ -30,8 +30,16 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-add_subdirectory(find_resource)
-add_subdirectory(particles)
-add_subdirectory(pcl)
-add_subdirectory(simple_bindings)
-add_subdirectory(simple_continuous_time_system)
+find_package(pybind11 CONFIG REQUIRED)
+
+pybind11_add_module(example_module MODULE example_module.cc)
+# TODO(eric.cousineau): Because `pybind11_add_module` only adds
+# `pybind11_INCLUDE_DIRS` and cps2cmake defines this as an empty string,
+# we must explicitly link it to `pybind11::module`.
+target_link_libraries(example_module PUBLIC drake::drake pybind11::module)
+
+add_test(NAME example_module_test COMMAND
+    "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/example_module_test.py")
+set_tests_properties(example_module_test PROPERTIES
+    # Using `pybind11/tests/test_cmake_build/installed_target` as an example.
+    ENVIRONMENT "PYTHONPATH=$<TARGET_FILE_DIR:example_module>:${PYTHONPATH}")
