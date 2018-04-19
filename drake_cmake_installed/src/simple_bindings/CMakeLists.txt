@@ -1,7 +1,7 @@
 # -*- mode: cmake -*-
 # vi: set ft=cmake :
 
-# Copyright (c) 2017, Massachusetts Institute of Technology.
+# Copyright (c) 2018, Toyota Research Institute.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
