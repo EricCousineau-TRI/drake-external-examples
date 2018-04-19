@@ -32,13 +32,21 @@
 
 find_package(pybind11 CONFIG REQUIRED)
 
-pybind11_add_module(example_module MODULE example_module.cc)
-# TODO(eric.cousineau): Because `pybind11_add_module` only adds
-# `pybind11_INCLUDE_DIRS` and cps2cmake defines this as an empty string,
-# we must explicitly link it to `pybind11::module`.
-target_link_libraries(example_module PUBLIC drake::drake pybind11::module)
-# Revert visibilty preset (workaround for RobotLocomotion/drake#8540).
-set_target_properties(example_module PROPERTIES CXX_VISIBILITY_PRESET "default")
+# N.B. Because `cps2cmake` will not provide `pybind11_INCLUDE_DIRS`, we cannot
+# use `pybind11_add_module`. Instead, we should use the interface library target
+# *only*:
+# http://pybind11.readthedocs.io/en/stable/compiling.html#advanced-interface-library-target
+add_library(example_module MODULE example_module.cc)
+# N.B. These next two lines are needed because our `cps2cmake` does
+# not reflect upstream `pybind11`'s CMake configuration.
+target_include_directories(example_module ${PYTHON_INCLUDE_DIRS})
+# N.B. Do not use `pybind11::module` as it adds `-fvisibility=hidden`, which
+# should not be used until RobotLocomotion/drake#8540 is resolved.
+target_link_libraries(example_module PRIVATE pybind11::pybind11)
+set_target_properties(example_module PROPERTIES
+    PREFIX "${PYTHON_MODULE_PREFIX}"
+    SUFFIX "${PYTHON_MODULE_EXTENSION}")
+target_link_libraries(example_module PUBLIC drake::drake)
 
 add_test(NAME example_module_test COMMAND
     "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/example_module_test.py")
