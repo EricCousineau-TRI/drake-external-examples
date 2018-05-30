@@ -51,10 +51,8 @@ PYBIND11_MODULE(simple_adder, m) {
 
   py::module::import("pydrake.systems.framework");
 
-  using T = double;
-
-  py::class_<SimpleAdder<T>, LeafSystem<T>>(m, "SimpleAdder")
-      .def(py::init<T>(), py::arg("add"));
+  py::class_<SimpleAdder<double>, LeafSystem<double>>(m, "SimpleAdder")
+      .def(py::init<double>(), py::arg("add"));
 }
 
 }  // namespace
