@@ -1,6 +1,3 @@
-# -*- mode: python -*-
-# vi: set ft=python :
-
 # Copyright (c) 2018, Toyota Research Institute.
 # All rights reserved.
 #
@@ -30,35 +27,42 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-DRAKE_COMMIT = "master"
-DRAKE_CHECKSUM = ""
+"""
+Provides an example of using pybind11-bound Drake C++ system with pydrake.
+"""
 
-# Or choose a specific revision of Drake to use.
-# DRAKE_COMMIT = "be4f658487f739ba04ec079de46f9459b719636d"
-# DRAKE_CHECKSUM = "31ec8f87df3ceb6516de3c33a14c5d59ac5c003b4faf93ac526877d2e150b394"
-# Before changing the COMMIT, temporarily uncomment the next line so that Bazel
-# displays the suggested new value for the CHECKSUM.
-# DRAKE_CHECKSUM = "0" * 64
+from __future__ import print_function
 
-# Download Drake.
-# http_archive(
-#     name = "drake",
-#     urls = [x.format(DRAKE_COMMIT) for x in [
-#         "https://github.com/RobotLocomotion/drake/archive/{}.tar.gz",
-#     ]],
-#     sha256 = DRAKE_CHECKSUM,
-#     strip_prefix = "drake-{}".format(DRAKE_COMMIT),
-# )
+from simple_bindings import SimpleAdder
 
-# To use a local checkout of Drake instead of the github.com download described
-# above, replace the http_archive stanza with something like the following:
-local_repository(
-    name = "drake",
-    path = "/home/eacousineau/proj/tri/repo/branches/drake/tmp/drake",
+import numpy as np
+
+from pydrake.systems.analysis import Simulator
+from pydrake.systems.framework import (
+    DiagramBuilder,
+)
+from pydrake.systems.primitives import (
+    ConstantVectorSource,
+    SignalLogger,
 )
 
-# Reference external software libraries and tools per Drake's defaults.  Some
-# software will come from the host system (Ubuntu or macOS); other software
-# will be downloaded in source or binary form from github or other sites.
-load("@drake//tools/workspace:default.bzl", "add_default_repositories")
-add_default_repositories()
+
+def main():
+    builder = DiagramBuilder()
+    source = builder.AddSystem(ConstantVectorSource([10.]))
+    adder = builder.AddSystem(SimpleAdder(100.))
+    builder.Connect(source.get_output_port(0), adder.get_input_port(0))
+    logger = builder.AddSystem(SignalLogger(1))
+    builder.Connect(adder.get_output_port(0), logger.get_input_port(0))
+    diagram = builder.Build()
+
+    simulator = Simulator(diagram)
+    simulator.StepTo(1)
+
+    x = logger.data()
+    print("Output values: {}".format(x))
+    assert np.allclose(x, 110.)
+
+
+if __name__ == "__main__":
+    main()
