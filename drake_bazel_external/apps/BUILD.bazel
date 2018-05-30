@@ -71,6 +71,26 @@ sh_test(
     data = [":simple_logging_example"],
 )
 
+cc_library(
+    name = "simple_adder",
+    srcs = [
+        "simple_adder-inl.cc",
+        "simple_adder.cc",
+    ],
+    hdrs = [
+        "simple_adder.h",
+    ],
+    deps = [
+        "@drake//:drake_shared_library",
+    ],
+)
+
+cc_test(
+    name = "simple_adder_test",
+    srcs = ["simple_adder_test.cc"],
+    deps = [":simple_adder"],
+)
+
 # For custom bindings, you *must* link against `drake_shared_library` for *all*
 # C++ libraries; not doing so will lead to ODR (One Definition Rule) linking
 # issues.
@@ -79,6 +99,7 @@ pybind_py_library(
     cc_so_name = "simple_bindings",
     cc_srcs = ["simple_bindings.cc"],
     cc_deps = [
+        ":simple_adder",
         "@drake//:drake_shared_library",
     ],
     py_deps = [
