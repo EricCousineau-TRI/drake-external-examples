@@ -8,7 +8,7 @@ using drake::systems::LeafSystem;
 using drake::systems::kVectorValued;
 
 template <typename T>
-SimpleAdder::SimpleAdder(T add)
+SimpleAdder<T>::SimpleAdder(T add)
       : add_(add) {
   this->DeclareInputPort(kVectorValued, 1);
   this->DeclareVectorOutputPort(
@@ -16,7 +16,7 @@ SimpleAdder::SimpleAdder(T add)
 }
 
 template <typename T>
-void SimpleAdder::CalcOutput(
+void SimpleAdder<T>::CalcOutput(
     const Context<T>& context, BasicVector<T>* output) const {
   auto u = this->EvalEigenVectorInput(context, 0);
   auto&& y = output->get_mutable_value();

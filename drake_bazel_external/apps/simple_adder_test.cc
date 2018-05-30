@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <drake/common/text_logging.h>
 #include <drake/systems/analysis/simulator.h>
 #include <drake/systems/framework/diagram_builder.h>
@@ -6,27 +8,38 @@
 
 #include "simple_adder.h"
 
-using drake::systems::Simulator:
+using drake::systems::Simulator;
 using drake::systems::DiagramBuilder;
 using drake::systems::ConstantVectorSource;
 using drake::systems::SignalLogger;
 
-int main() {
-  DiagramBuilder builder;
+namespace shambhala {
+namespace {
 
-  auto source = builder.AddSystem<ConstantVectorSource>(
-      Eigen::Vector1d::Constant(10.));
-  auto adder = builder.AddSystem<SimpleAdder>(100.);
-  builder.Connect(source->get_output_port(0), adder->get_input_port(0));
-  auto logger = builder.AddSystem<SignalLogger>(1);
-  builder.Connect(adder->get_output_port(0), logger->get_input_port(0));
+int DoMain() {
+  DiagramBuilder<double> builder;
 
-  auto diagram = diagram.Build();
+  auto source = builder.AddSystem<ConstantVectorSource<double>>(
+      Eigen::VectorXd::Constant(1, 10.));
+  auto adder = builder.AddSystem<SimpleAdder<double>>(100.);
+  builder.Connect(source->get_output_port(), adder->get_input_port(0));
+  auto logger = builder.AddSystem<SignalLogger<double>>(1);
+  builder.Connect(adder->get_output_port(0), logger->get_input_port());
 
-  Simulator simulator(*diagram);
+  auto diagram = builder.Build();
+
+  Simulator<double> simulator(*diagram);
   simulator.StepTo(1);
 
   auto x = logger->data();
-  drake::log()->info("Output values: {}", x.transpose());
+
+  std::cout << "Output values: " << x << std::endl;
   return 0;
+}
+
+}  // namespace
+}  // namespace shambhala
+
+int main() {
+  return shambhala::DoMain();
 }
