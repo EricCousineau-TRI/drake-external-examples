@@ -79,7 +79,7 @@ pybind_py_library(
     cc_so_name = "simple_bindings",
     cc_srcs = ["simple_bindings.cc"],
     cc_deps = [
-        "@drake//bindings/pydrake:drake_shared_library",
+        "@drake//:drake_shared_library",
     ],
     py_deps = [
         "@drake//bindings/pydrake",
