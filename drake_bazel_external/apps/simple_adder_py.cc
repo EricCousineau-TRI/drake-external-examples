@@ -46,7 +46,7 @@ using drake::systems::LeafSystem;
 namespace shambhala {
 namespace {
 
-PYBIND11_MODULE(simple_bindings, m) {
+PYBIND11_MODULE(simple_adder, m) {
   m.doc() = "Example module interfacing with pydrake and Drake C++";
 
   py::module::import("pydrake.systems.framework");

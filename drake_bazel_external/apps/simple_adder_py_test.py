@@ -33,7 +33,7 @@ Provides an example of using pybind11-bound Drake C++ system with pydrake.
 
 from __future__ import print_function
 
-from simple_bindings import SimpleAdder
+from simple_adder import SimpleAdder
 
 import numpy as np
 
