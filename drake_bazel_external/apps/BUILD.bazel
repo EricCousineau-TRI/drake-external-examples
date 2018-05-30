@@ -74,8 +74,8 @@ sh_test(
 cc_library(
     name = "simple_adder",
     srcs = [
-        "simple_adder-inl.cc",
         "simple_adder.cc",
+        "simple_adder-inl.h",
     ],
     hdrs = [
         "simple_adder.h",
@@ -95,9 +95,9 @@ cc_test(
 # C++ libraries; not doing so will lead to ODR (One Definition Rule) linking
 # issues.
 pybind_py_library(
-    name = "simple_bindings_py",
-    cc_so_name = "simple_bindings",
-    cc_srcs = ["simple_bindings.cc"],
+    name = "simple_adder_py",
+    cc_so_name = "simple_adder_py",
+    cc_srcs = ["simple_adder_py.cc"],
     cc_deps = [
         ":simple_adder",
         "@drake//:drake_shared_library",
@@ -109,7 +109,7 @@ pybind_py_library(
 )
 
 py_test(
-    name = "simple_bindings_test",
-    srcs = ["simple_bindings_test.py"],
-    deps = [":simple_bindings_py"],
+    name = "simple_adder_py_test",
+    srcs = ["simple_adder_py_test.py"],
+    deps = [":simple_adder_py"],
 )
