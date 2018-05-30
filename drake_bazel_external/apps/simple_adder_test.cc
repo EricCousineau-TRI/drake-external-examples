@@ -18,22 +18,22 @@ namespace {
 
 int DoMain() {
   DiagramBuilder<double> builder;
-
   auto source = builder.AddSystem<ConstantVectorSource<double>>(
       Eigen::VectorXd::Constant(1, 10.));
   auto adder = builder.AddSystem<SimpleAdder<double>>(100.);
   builder.Connect(source->get_output_port(), adder->get_input_port(0));
   auto logger = builder.AddSystem<SignalLogger<double>>(1);
   builder.Connect(adder->get_output_port(0), logger->get_input_port());
-
   auto diagram = builder.Build();
 
   Simulator<double> simulator(*diagram);
   simulator.StepTo(1);
 
   auto x = logger->data();
-
+  Eigen::VectorXd x_expected = Eigen::Vector2d(110., 110.);
   std::cout << "Output values: " << x << std::endl;
+  DRAKE_DEMAND(x.isApprox(x_expected));
+
   return 0;
 }
 
