@@ -31,7 +31,12 @@
 Provides an example of using pybind11-bound Drake C++ system with pydrake.
 """
 
-from __future__ import print_function
+from pydrake.examples.multibody.cart_pole_passive_simulation import main
+main()
+
+exit(0)
+
+# from __future__ import print_function
 
 from simple_adder import SimpleAdder, SimpleAdder_
 

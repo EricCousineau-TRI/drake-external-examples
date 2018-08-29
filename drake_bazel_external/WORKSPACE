@@ -30,12 +30,12 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-DRAKE_COMMIT = "master"
-DRAKE_CHECKSUM = ""
+# DRAKE_COMMIT = "master"
+# DRAKE_CHECKSUM = ""
 
 # Or choose a specific revision of Drake to use.
-# DRAKE_COMMIT = "be4f658487f739ba04ec079de46f9459b719636d"
-# DRAKE_CHECKSUM = "31ec8f87df3ceb6516de3c33a14c5d59ac5c003b4faf93ac526877d2e150b394"
+DRAKE_COMMIT = "ca1d5fa5bd2ea87eb00324786894496373534470"
+DRAKE_CHECKSUM = "c5f7c5bd7be3540d779585b394c6a543e39025ef880a7ec83f3eb479272ae5eb"
 # Before changing the COMMIT, temporarily uncomment the next line so that Bazel
 # displays the suggested new value for the CHECKSUM.
 # DRAKE_CHECKSUM = "0" * 64
