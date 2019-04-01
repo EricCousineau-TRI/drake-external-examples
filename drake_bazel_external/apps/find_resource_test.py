@@ -32,10 +32,13 @@ Provides an example (and test) of finding resources with Python from a Bazel
 project.
 """
 
-from pydrake.common import FindResourceOrThrow, set_log_level
+import os
 
-# If you have trouble finding resources, you can enable trace logging to see
-# how `FindResource*` is searching.
-set_log_level("trace")
+from pydrake.common import AddResourceSearchPath, FindResourceOrThrow
+
+# N.B. This is generally ONLY true when run via `bazel run` or `bazel test`!
+runfiles_dir = os.getcwd()
+# HACK: Add the path. You could also set environment variables.
+AddResourceSearchPath(os.path.join(runfiles_dir, "external"))
 
 FindResourceOrThrow("drake/examples/quadrotor/quadrotor.urdf")
