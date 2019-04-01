@@ -32,8 +32,9 @@
 
 workspace(name = "drake_external_examples")
 
-DRAKE_COMMIT = "master"
-DRAKE_CHECKSUM = ""
+# PR DRAFT: DO NOT MERGE
+DRAKE_COMMIT = "0dcebcd5038feaf402cce772841e7583f75bb1bd"
+DRAKE_CHECKSUM = "56d01ab720a05d3576c6f9bb11ab783804962375d213282754dd1d25687acff1"
 
 # Or choose a specific revision of Drake to use.
 # DRAKE_COMMIT = "be4f658487f739ba04ec079de46f9459b719636d"
