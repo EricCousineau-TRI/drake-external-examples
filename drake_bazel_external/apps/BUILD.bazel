@@ -45,6 +45,14 @@ cc_binary(
     ],
 )
 
+py_binary(
+    name = "find_resource_test",
+    srcs = ["find_resource_test.py"],
+    deps = [
+        "@drake//bindings/pydrake",
+    ],
+)
+
 # Make a simple Python application.
 py_binary(
     name = "simple_logging_example",
