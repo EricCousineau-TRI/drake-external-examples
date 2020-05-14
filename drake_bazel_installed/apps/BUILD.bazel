@@ -66,3 +66,12 @@ py_test(
         "@drake//bindings/pydrake",
     ],
 )
+
+py_binary(
+    name = "bar",
+    srcs = ["bar.py"],
+    deps = [
+        "//common:foo",
+        "@drake//bindings/pydrake",
+    ]
+)
