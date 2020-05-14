@@ -1,0 +1,7 @@
+load("@drake//tools/skylark:py.bzl", "py_library")
+
+py_library(
+    name = "foo",
+    srcs = ["foo.py"],
+    visibility = ["//visibility:public"],
+)
